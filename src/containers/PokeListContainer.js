@@ -14,9 +14,20 @@ import {catchCard} from '../actions-reducers';
 // translate from redux state to react props
 const mapStateToProps = (state) => {
     // return a custom props object
+    const pushedCards = (state.cards).filter(card => {
+        switch(state.visibilityFilter){
+            case "caught":
+            return (card.isCaught);
+            case "uncaught":
+            return !(card.isCaught);
+            default:
+            return card;
+
+        }
+    });
     return{
         // react: redux
-        cards: state.cards
+        cards: pushedCards,
     };
 };
 
@@ -30,6 +41,7 @@ const mapDispatchToProps = (dispatch) => {
 };
 
 // connect gives us a function that knows how to translate fro a dumb component
+// connect expects two args: "mapStateToProps" and "mapDispatchToProps"
 const wireUpTheComponent = connect(mapStateToProps, mapDispatchToProps);
 // alternative name: `makeComponentSmart`
 
