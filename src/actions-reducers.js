@@ -7,7 +7,7 @@ const VISIBILITY_UNCAUGHT = 'uncaught';
 
 const initialState = {
     ...initialCards,
-    visibiltyFilter: VISIBILITY_ALL
+    visibiltyFilter: VISIBILITY_UNCAUGHT
 };
 // the state is an object with a cards property which is an array of objects
 // { cards: [{}, {}, {}, {}] }
