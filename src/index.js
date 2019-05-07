@@ -5,7 +5,7 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 
 // ///////////////////// STATE
-import {createStore} from 'redux';
+import {createStore, combineReducers} from 'redux';
 import initialCards from './base.json';
 
 const VISIBILITY_ALL = 'all';
@@ -49,67 +49,58 @@ function setVisibilityUncaught(){
 }
 
 // ///////////////////// REDUCER
-function cards(state=initialState, action={type: ''}){
+// // Each reducer should only manage one piece of state
+// cards reducer manages an array
+function cards(state=initialState.cards, action={type: ''}){
     switch(action.type){
         case ACTION_CATCH: 
             // find the card, set it to "caught"
-            const newState = {
-                ...state,
-                cards: state.cards.map(card => {
-                    if(card.id === action.payload.id){
-                        return {
-                            ...card, 
-                            isCaught: true
-                        };
-                    }
-                    else{
-                        return card;
-                    }
-                })
-            };
-            return newState;
-        break;
+            return state.map(card => {
+                if(card.id === action.payload.id){
+                    return {
+                        ...card, 
+                        isCaught: true
+                    };
+                }
+                else{
+                    return card;
+                }
+            });
+            break;
         default:
             return state;
-        break;
+            break;
     }
 }
 
-function visibility(state=initialState, action={type: ''}){
+// visibility reducer manages a string
+function visibility(state=initialState.visibiltyFilter, action={type: ''}){
     switch(action.type){
         case ACTION_VISIBILITY_ALL :
-            const newState1 = {
-                ...state,
-                visibiltyFilter: VISIBILITY_ALL
-            }
-                return newState1;
-        break;
+            return VISIBILITY_ALL;
+            break;
         case ACTION_VISIBILITY_CAUGHT :
-            const newState2 = {
-                ...state,
-                visibiltyFilter: VISIBILITY_CAUGHT
-            }
-            return newState2;
-        break;
+            return VISIBILITY_CAUGHT;
+            break;
         case ACTION_VISIBILITY_UNCAUGHT :
-            const newState3 = {
-                ...state,
-                visibiltyFilter: VISIBILITY_UNCAUGHT
-            }
-            return newState3;
-        break;
+            return VISIBILITY_UNCAUGHT;
+            break;
         default:
             return state;
-        break;
+            break;
     }
 }
 
 
 
 
+const rootReducer = combineReducers({
+    cards: cards,
+    visibilityFilter: visibility
+});
 
 // ///////////////////// STORE
-const store = createStore(cards);
+const store = createStore(rootReducer);
 
 
 
